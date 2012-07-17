@@ -5,9 +5,9 @@
 		var opts = $.extend({
 			'trigger': 'submit',
 			'find': 'select,textarea,input[type!="submit"][type!="button"][type!="image"][type!="hidden"]',
-			'class': 'error',
+			'class': 'validate-error',
 			'novalidate': false,
-			'css': '.error {box-shadow: 0px 0px 12px #e10000;}',
+			'css': '.validate-error {box-shadow: 0px 0px 12px #e10000;}',
 			'dialog': '#errordialog',
 			'transition': 'slideup',
 			'title': 'Please correct the following:',
@@ -121,19 +121,28 @@
 				'first_name': {pattern: /^[a-zA-Z]+[- ]?[a-zA-Z]*$/},
 				'last_name': {pattern: /^[a-zA-Z]+[- ]?[a-zA-Z]+\s*,?([a-zA-Z]+|[a-zA-Z]+\.)?$/},
 				'email': {pattern: /^[\w\-\+\._]+\@[a-zA-Z0-9][-a-zA-Z0-9\.]*\.[a-zA-Z]+$/},
-				'confirm_password': {pattern: /^[\w.!?@#$%&*]{5,}$/, validate: function(field){
+				'confirm_password': {validate: function(field) {
 					var password_field = $(field).closest('form').find('input[type="password"][name!="' + $(field).attr('name') + '"]');
-					if ($(field).val() && password_field.length) {
-						if ($(field).val() == password_field.val()) {
-							return true;
+					var value = $(field).val();
+
+					if($(field).attr('required')) {
+						if (value == null || value === "") {
+							return false;
 						}
 						else {
+							if (password_field.length && value != password_field.val()) {
+								return false;
+							}
+						}
+					}
+					else if ( ! (value == null || value === "")) {
+						if (password_field.length && value != password_field.val()) {
 							return false;
 						}
 					}
-					else {
-						return true;
-					}
+
+					return true;
+
 				}, message: '"%FIELDNAME%" must match "Password"'},
 				'password': {pattern: /^[\w.!?@#$%&*]{5,}$/, message: 'Enter "%FIELDNAME%" with minimum 5 characters'},
 				'money': {pattern: /^\-?\d{1,11}(\.\d{2})?$/},
