@@ -3,11 +3,12 @@ jQuery-Mobilevalidate
 
 jQuery Mobile Form Validation Plugin
 
-* Auto match form fields with built-in patterns and messages
-* Honours with browser-based HTML 5 validations
+* Auto-match form fields with built-in patterns and messages by field name
+* Honours browser-based HTML 5 validations via pattern and required attributes
+* Use regex pattern or custom validation callback to validate fields
 * Compatible with jQuery Mobile data-* namespace
-* Built-in error CSS that works with jQuery Mobile form elements
-* Use jQuery Mobile dialogue page to display error (optional)
+* Built-in error CSS and code to work with jQuery Mobile enhanced form elements
+* Use jQuery Mobile dialogue page to display validation errors (optional)
 * Customisable callbacks
 
 Requires
