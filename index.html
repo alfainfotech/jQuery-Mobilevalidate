@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery Mobile Validate Demo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+		<script src="./jquery.mobilevalidate.min.js"></script>
+
+		<script type="text/javascript">
+			$(document).bind('pageinit', function(){
+				$('form').mobilevalidate();
+			});
+		</script>
+
+	</head>
+	<body>
+		<div data-role="page" id="home">
+			<div data-role="content">
+				<h1>The Form</h1>
+				<form action="#" method="post" data-ajax="false">
+					<input type="hidden" name="rm" value="admin" />					
+					<div data-role="fieldcontain">
+						<label for="email">Email:</label>
+						<input type="email" name="email" id="email" value="" autofocus="1" required>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="password">Password:</label>
+						<input type="password" name="password" id="password" value="" required/>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="confirm_password">Confirm Password:</label>
+						<input type="password" name="confirm_password" id="confirm_password" value="" required/>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="gender">Gender:</label>
+						<select id="gender" name="gender" required>
+							<option value=""> Select </option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select>
+					</div>
+					<fieldset data-role="controlgroup">
+						<legend>Pet:</legend>
+						<input type="radio" name="pet-option" id="pet-option-1" value="Cat" required/>
+						<label for="pet-option-1">Cat</label>
+						<input type="radio" name="pet-option" id="pet-option-2" value="Dog"/>
+						<label for="pet-option-2">Dog</label>
+					</fieldset>
+
+					<fieldset data-role="controlgroup">
+						<legend>Sports:</legend>
+						<input type="checkbox" name="sports-option" id="sports-option-1" value="Basketball" required/>
+						<label for="sports-option-1">Basketball</label>
+						<input type="checkbox" name="sports-option" id="sports-option-2" value="Soccer"/>
+						<label for="sports-option-2">Soccer</label>
+					</fieldset>
+
+					<input type="submit" value="Submit"/>
+				</form>
+			</div><!-- /content -->
+		</div><!-- /page -->
+		
+ 		<div data-role="dialog" id="errordialog">
+			<div data-role="header">
+				<h1>Checking</h1>
+			</div>
+			<div data-role="content"></div>
+		</div>
+
+	</body>
+</html>
