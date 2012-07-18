@@ -4,7 +4,7 @@
 
 		var opts = $.extend({
 			'trigger': 'submit',
-			'find': 'select,textarea,input[type!="submit"][type!="button"][type!="image"][type!="hidden"]',
+			'find': 'select:not(:disabled),textarea:not(:disabled),input:not(:disabled)[type!="submit"][type!="button"][type!="image"][type!="hidden"]',
 			'class': 'validate-error',
 			'novalidate': false,
 			'css': '.validate-error {box-shadow: 0px 0px 12px #e10000;}',
@@ -12,6 +12,10 @@
 			'transition': 'slideup',
 			'title': 'Please correct the following:',
 			'delimiter': "\n - ",
+			'bind': {
+				'text': 'change',
+				'select': 'change'
+			},
 			'add': function(field, options){
 				if ($(field).is('input[type="radio"]') || $(field).is('input[type="checkbox"]')) {
 					$('input[name="' + $(field).attr('name') + '"]').each(function(){
@@ -37,6 +41,126 @@
 				else {
 					$(field).removeClass(options['class']);
 				}
+			},
+			'validate': function(form, field, options, result) {
+				if ($(field).jqmData('validate') == 'true') {
+
+					if (! result) {
+						options.remove(field, options);
+					}
+
+					if ($(field).is('input[type="radio"]') || $(field).is('input[type="checkbox"]')) {
+
+						var field_name = $(field).attr('name');
+						var field_required = $('input[name="' + field_name + '"]').attr('required');
+
+						if ($(field).is('input[type="radio"]')) {
+							
+							if (field_required) {
+								var value = $('input[name="' + field_name + '"]:checked').val();
+								if (value == null || value === "") {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+						}
+						else {
+							
+							if (field_required) {
+
+								var values = $('input[name="' + field_name + '"]:checked').map(function(){return $(field).val();});
+
+								if (! values.length) {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+						}
+					}	
+					else {
+						var pattern = $(field).attr('pattern');
+						var value = $(field).val();
+						var matched = $(field).jqmData('match');
+
+						if ($(field).attr('required')) {
+							if (matched && options.fields[matched].validate) {
+								if (! options.fields[matched].validate(field)) {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+							else if (pattern) {
+								var regex = new RegExp(pattern.replace(/^\//, '').replace(/\/$/, ''));
+
+								if ((value == null || value === "") || ! regex.test(value)) {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+							else {
+
+								if (value == null || value === "") {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+						}
+						else {
+							if (! (value == null || value === "") && matched && options.fields[matched].validate) {
+								if (! options.fields[matched].validate(field)) {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+							else if (! (value == null || value === "") && pattern) {
+								var regex = new RegExp(pattern);
+
+								if (! regex.test(value)) {
+									if (result) {
+										return false;
+									}
+									else {
+										options.error(form, field, options);	
+									}
+								}
+							}
+						}
+					}
+
+					return true;
+				}
+			},
+			'error': function(form, field, options) {
+				var errors = $(form).jqmData('error').count;
+				errors++;
+				var messages = $(form).jqmData('error').messages;
+				messages.push($(field).jqmData('message'));
+				$(form).jqmData('error', {count : errors, messages: messages});
+				options.add(field, options);
 			},
 			'label': function (field) {
 				var field_id = $(field).attr('id');
@@ -122,6 +246,7 @@
 				'last_name': {pattern: /^[a-zA-Z]+[- ]?[a-zA-Z]+\s*,?([a-zA-Z]+|[a-zA-Z]+\.)?$/},
 				'email': {pattern: /^[\w\-\+\._]+\@[a-zA-Z0-9][-a-zA-Z0-9\.]*\.[a-zA-Z]+$/},
 				'confirm_password': {validate: function(field) {
+
 					var password_field = $(field).closest('form').find('input[type="password"][name!="' + $(field).attr('name') + '"]');
 					var value = $(field).val();
 
@@ -178,6 +303,8 @@
 
 					if (! field_validate) {
 
+						this_field.jqmData('validate', 'true');
+
 						var field_message = this_field.jqmData('message');
 
 						if (! field_message) {
@@ -204,10 +331,16 @@
 							}
 
 							this_field.jqmData('message', field_message);
-
 						}
 
-						this_field.jqmData('validate', 'true');
+						$('input[name="' + field_name + '"]').bind(opts.bind['select'], function(){
+							if (opts.validate(that, this_field, opts, 1)) {
+								opts.remove(this_field, opts);
+							}
+							else {
+								opts.add(this_field, opts);
+							}
+						});
 
 					}
 
@@ -276,6 +409,27 @@
 							this_field.jqmData('message', field_message);
 						}
 
+						if (this_field.is('select')) {
+							this_field.bind(opts.bind['select'], function(){
+								if (opts.validate(that, this_field, opts, 1)) {
+									opts.remove(this_field, opts);
+								}
+								else {
+									opts.add(this_field, opts);
+								}
+							});
+						}
+						else {
+							this_field.bind(opts.bind['text'], function(){
+								if (opts.validate(that, this_field, opts, 1)) {
+									opts.remove(this_field, opts);
+								}
+								else {
+									opts.add(this_field, opts);
+								}
+							});
+						}
+
 					}
 
 				}
@@ -288,102 +442,15 @@
 
 					var this_form = this;
 					var fields = $(this).find(opts.find);
-					var errors = 0;
-					var error_messages = [];
+
+					that.jqmData('error', {count : 0, messages : []}); // reset 
 
 					fields.each(function(){
-
-						if ($(this).jqmData('validate') == 'true') {
-
-							opts.remove(this, opts);
-
-							if ($(this).is('input[type="radio"]') || $(this).is('input[type="checkbox"]')) {
-
-								var field_name = $(this).attr('name');
-								var field_required = $('input[name="' + field_name + '"]').attr('required');
-
-								if ($(this).is('input[type="radio"]')) {
-									
-									if (field_required) {
-										var value = $('input[name="' + field_name + '"]:checked').val();
-										if (value == null || value === "") {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-								}
-								else {
-									
-									if (field_required) {
-
-										var values = $('input[name="' + field_name + '"]:checked').map(function(){return $(this).val();});
-
-										if (! values.length) {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-								}
-								
-							}	
-							else {
-								var pattern = $(this).attr('pattern');
-								var value = $(this).val();
-								var matched = $(this).jqmData('match');
-
-								if ($(this).attr('required')) {
-									if (matched && opts.fields[matched].validate) {
-										if (! opts.fields[matched].validate(this)) {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-									else if (pattern) {
-										var regex = new RegExp(pattern.replace(/^\//, '').replace(/\/$/, ''));
-
-										if ((value == null || value === "") || ! regex.test(value)) {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-									else {
-
-										if (value == null || value === "") {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-								}
-								else {
-									if (! (value == null || value === "") && matched && opts.fields[matched].validate) {
-										if (! opts.fields[matched].validate(this)) {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-									else if (! (value == null || value === "") && pattern) {
-										var regex = new RegExp(pattern);
-
-										if (! regex.test(value)) {
-											errors++;
-											error_messages.push($(this).jqmData('message'));
-											opts.add(this, opts);
-										}
-									}
-								}
-							}
-						}
-
+						opts.validate(this_form, this, opts, 0);
 					});
 					
-					if (errors) {
-						return opts.callback(error_messages, opts);
+					if ($(this_form).jqmData('error').count) {
+						return opts.callback($(this_form).jqmData('error').messages, opts);
 					}
 					else {
 						return true;
