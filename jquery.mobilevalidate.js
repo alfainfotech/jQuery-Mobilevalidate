@@ -194,7 +194,13 @@
 
 				return label;
 			},
-			'callback': function(messages, options){
+			'fail': function (form, options) {
+				return false;
+			},
+			'success': function (form, options) {
+				return true;
+			},
+			'alert': function(form, messages, options){
 				if ($(options['dialog']).length) {
 
 					var formatted_message =  "\n<ul>\n" + $.map(messages, function(val, i){
@@ -450,10 +456,11 @@
 					});
 					
 					if ($(this_form).jqmData('error').count) {
-						return opts.callback($(this_form).jqmData('error').messages, opts);
+						opts.alert(this_form, $(this_form).jqmData('error').messages, opts);
+						return opts.fail(this_form, opts);
 					}
 					else {
-						return true;
+						return opts.success(this_form, opts);
 					}
 
 				});
