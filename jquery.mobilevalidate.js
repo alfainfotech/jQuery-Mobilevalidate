@@ -181,7 +181,7 @@
 						var field_label = $('label[for="' + field_id + '"]');
 						
 						if (field_label) {
-							label = field_label.text().replace(/\s*:$/, '');
+							label = field_label.first().text().replace(/\s*:$/, '');
 						}
 					}
 
