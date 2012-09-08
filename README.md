@@ -27,7 +27,7 @@ Options
 -------
 
     $('form').mobilevalidate({
-        find: 'select:not(:disabled),textarea:not(:disabled),input:not(:disabled)[type!="submit"][type!="button"][type!="image"][type!="hidden"]', // selectors to filter fields to be validated
+        find: 'select:not(:disabled)[name],textarea:not(:disabled)[name],input:not(:disabled)[type!="submit"][type!="button"][type!="image"][type!="hidden"][name]', // selectors to filter fields to be validated
         class: 'validate-error', // default CSS class name for invalid fields
         css: '.validate-error {box-shadow: 0px 0px 12px #e10000;}', // handy CSS injected into <head> dynamically; avoid by setting it to '' (when external CSS files are used)
         novalidate: false, // set true to disable browser's default HTML5 validation. Useful for checkbox groups (with the same "name") as browsers understand only individual checkboxes with 'required' attribute
