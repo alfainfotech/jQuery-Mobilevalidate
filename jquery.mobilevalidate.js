@@ -4,7 +4,7 @@
 
 		var opts = $.extend({
 			'trigger': 'submit',
-			'find': 'select:not(:disabled),textarea:not(:disabled),input:not(:disabled)[type!="submit"][type!="button"][type!="image"][type!="hidden"]',
+			'find': 'select:not(:disabled)[name],textarea:not(:disabled)[name],input:not(:disabled)[type!="submit"][type!="button"][type!="image"][type!="hidden"][name]',
 			'class': 'validate-error',
 			'novalidate': false,
 			'css': '.validate-error {box-shadow: 0px 0px 12px #e10000;}',
