@@ -36,7 +36,7 @@ Options
         title: 'Please correct the following:', // default title for the error dialog
         delimiter: "\n - ", // error message delimiter for alert() when the jQuery Mobile Dialog is not found
         'bind': {
-            'text': 'change', // validation trigger for text text input elements, e.g. text, textarea
+            'text': 'change', // validation trigger for text input elements, e.g. text, textarea
             'select': 'change' // validation trigger for non-input elements, e.g. select, checkbox, radio
         },
     });
