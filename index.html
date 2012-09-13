@@ -3,9 +3,9 @@
 	<head>
 		<title>jQuery Mobile Validate Demo</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
-		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-beta.1/jquery.mobile-1.2.0-beta.1.min.css" />
+		<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.2.0-beta.1/jquery.mobile-1.2.0-beta.1.min.js"></script>
 		<script src="https://raw.github.com/dannyglue/jQuery-Mobilevalidate/master/jquery.mobilevalidate.min.js"></script>
 
 		<script type="text/javascript">
@@ -51,11 +51,16 @@
 
 					<fieldset data-role="controlgroup">
 						<legend>Sports:</legend>
-						<input type="checkbox" name="sports-option" id="sports-option-1" value="Basketball" required/>
+						<input type="checkbox" name="sports-option" id="sports-option-1" value="Basketball" required data-message="Select you favorite &quot;Sport&quot;"/>
 						<label for="sports-option-1">Basketball</label>
-						<input type="checkbox" name="sports-option" id="sports-option-2" value="Soccer"/>
+						<input type="checkbox" name="sports-option" id="sports-option-2" value="Soccer" />
 						<label for="sports-option-2">Soccer</label>
 					</fieldset>
+
+					<div data-role="fieldcontain">
+						<label for="comments">Comments:</label>
+						<textarea name="comments" id="comments" required data-message="Please enter your &quot;Comments&quot;"></textarea>
+					</div>
 
 					<input type="submit" value="Submit"/>
 				</form>
@@ -64,7 +69,7 @@
 		
  		<div data-role="dialog" id="errordialog">
 			<div data-role="header">
-				<h1>Checking</h1>
+				<h1>Checking Your Form</h1>
 			</div>
 			<div data-role="content"></div>
 		</div>

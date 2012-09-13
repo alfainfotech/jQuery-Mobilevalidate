@@ -353,12 +353,12 @@
 				}
 				else {
 					
-					var field_validate = $(this).jqmData('validate');
+					var field_validate = this_field.jqmData('validate');
 					var field_required = this_field.attr('required');
 					var field_pattern = this_field.attr('pattern');
-					var field_message = this_field.jqmData('message');
+					var field_message = this_field.jqmData('message');	
 
-					if (field_validate != 'false' || (field_required || field_pattern || field_message)) {
+					if (! field_validate || (field_required || field_pattern || field_message)) {
 
 						this_field.jqmData('validate', 'true');
 
@@ -390,7 +390,6 @@
 						});
 
 						if (! field_message) {
-
 							if (this_field.is('input')) {
 
 								var field_type = this_field.attr('type');
@@ -406,7 +405,7 @@
 								field_message = opts.messages['select'].replace('%FIELDNAME%', message_label);
 							}
 							else if (this_field.is('textarea')) {
-								field_message = opts.messages['select'].replace('%FIELDNAME%', message_label);
+								field_message = opts.messages['textarea'].replace('%FIELDNAME%', message_label);
 							}
 
 						}
