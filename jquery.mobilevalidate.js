@@ -22,11 +22,11 @@
 						$('label[for="' + $(this).attr('id') + '"]').addClass(options['class']);
 					});
 				}
-				else if ($(field).is('select')) {
-					$(field).parent().addClass(options['class']);
-				}	
-				else {
+				else if ($(field).is('textarea')) {
 					$(field).addClass(options['class']);
+				}
+				else {
+					$(field).parent().addClass(options['class']);
 				}
 			},
 			'remove': function(field, options){
@@ -35,11 +35,11 @@
 						$('label[for="' + $(this).attr('id') + '"]').removeClass(options['class']);
 					});							
 				}
-				else if ($(field).is('select')) {
-					$(field).parent().removeClass(options['class']);
+				else if ($(field).is('textarea')) {
+					$(field).removeClass(options['class']);
 				}	
 				else {
-					$(field).removeClass(options['class']);
+					$(field).parent().removeClass(options['class']);
 				}
 			},
 			'validate': function(form, field, options, result) {
